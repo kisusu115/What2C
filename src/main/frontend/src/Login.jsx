@@ -1,79 +1,51 @@
 import React, {useEffect, useState} from "react";
+import { useNavigate } from 'react-router-dom';
+import googleLogo from './pngs/google_logo.png';
+import kakaoLogo from './pngs/kakao_logo.png';
+import naverLogo from './pngs/naver_logo.png';
 
 export default function Login(){
-    const Admin = {
-        email : 'admin@example.com',
-        pw : 'pw1234!!!'
-    }
-
-    const [email, setEmail] = useState('');
+    const [id, setId] = useState('');
     const [pw, setPw] = useState('');
+    const navigate = useNavigate();
+    const [boolVal, setBoolVal] = useState(false);
 
-    const [emailValid, setEmailValid] = useState(false);
-    const [pwValid, setPwValid] = useState(false);
-    const [buttonNotAllow, setButtonNotAllow] = useState(true);
+    const handleInputChange = (e) => {
+        const {name, value} = e.target;
+        if (name === 'id') {
+            setId(value);
+        } else if (name === 'pw') {
+            setPw(value);
+        }
+    };
 
-    const handleEmail = (e)=>{
-        setEmail(e.target.value);
-        const regex = 
-            /^(([^<>()\[\].,;:\s@"]+(\.[^<>()\[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i;
-        if(regex.test(email)){
-            setEmailValid(true)
-        }else{
-            setEmailValid(false)
-        }
-    }
-    const handlePw = (e)=>{
-        setPw(e.target.value);
-        const regex = 
-            /^(?=.*[a-zA-z])(?=.*[0-9])(?=.*[$`~!@$!%*#^?&\\(\\)\-_=+])(?!.*[^a-zA-z0-9$`~!@$!%*#^?&\\(\\)\-_=+]).{8,20}$/;
-        if(regex.test(pw)){
-            setPwValid(true)
-        }else{
-            setPwValid(false)
-        }
+    const functionName = () => {
+        
     }
 
-    const onClickConfirmButton = () => {
-        if(email === Admin.email && pw === Admin.pw){
-            alert(`로그인에 성공했습니다. 환영합니다.
-                \n[${email}]
-                \n[${pw}]`)
-        }else{
-            alert("동록되지 않은 회원입니다.")
-        }
+    const signup = () => {
+        navigate('/signup');
     }
 
     useEffect(()=>{
-        if(emailValid && pwValid){
-            setButtonNotAllow(false);
-            return;
-        }
-        setButtonNotAllow(true);
-    }, [emailValid, pwValid]);
+
+    }, []);
 
     return (
         <div className="page">
             <div className="titleWrap">
-                이메일과 비밀번호를
-                <br/>
-                입력해주세요
+                로그인
             </div>
             <div className="contentWrap">
-                <div className="inputTitle">이메일 주소</div>
+            <div className="inputTitle">아이디</div>
                 <div className="inputWrap">
                     <input 
                         type='text'
                         className="input"
-                        placeholder="example@gmail.com"
-                        value={email}
-                        onChange={handleEmail} 
+                        placeholder="아이디를 입력해주세요."
+                        value={id}
+                        onChange={functionName}
                     />
-                </div>
-                <div className="errorMessageWrap">
-                    {!emailValid && email.length > 0 && (
-                        <div>올바른 이메일을 입력해주세요.</div>
-                    )}
                 </div>
 
                 <div style={{marginTop:"26px"}} className="inputTitle">비밀번호</div>
@@ -81,22 +53,43 @@ export default function Login(){
                     <input 
                         type='password'
                         className="input"
-                        placeholder="영문, 숫자, 특수문자 포함 8자 이상"
+                        placeholder="비밀번호를 입력해주세요."
                         value={pw}
-                        onChange={handlePw} 
+                        onChange={functionName} 
                     />
                 </div>
-                <div className="errorMessageWrap">
-                    {!pwValid && pw.length > 0 && (
-                        <div>영문, 숫자, 특수문자 포함 8자 이상 입력해주세요.</div>
-                    )}
+                <div>
+                    <button onClick = {functionName} className="loginButton">
+                        로그인
+                    </button>
+                    <div className="signupTextContainer">
+                        <p onClick={signup} className="signupText">
+                            회원가입
+                        </p>
+                        <p className="signupText">
+                            아이디/비밀번호 찾기
+                        </p>
+                    </div>
+                    <div className="separator">
+                        <span className="separateText">또는</span>
+                    </div>
+                    <div className="socialLoginContainer">
+                        <button className="socialButton googleButton">
+                            <img src={googleLogo} alt="Google" className="socialLogo"/>
+                            구글로 로그인
+                        </button>
+                        <button className="socialButton kakaoButton">
+                            <img src={kakaoLogo} alt="Kakao" className="socialLogo"/>
+                            카카오톡으로 로그인
+                        </button>
+                        <button className="socialButton naverButton">
+                            <img src={naverLogo} alt="Naver" className="socialLogo"/>
+                            네이버로 로그인
+                        </button>
+                    </div>
                 </div>
             </div>
-            <div>
-                <button onClick = {onClickConfirmButton} disabled={buttonNotAllow} className="bottomButton">
-                    확인
-                </button>
-            </div>
+            
         </div>
     );
 }
