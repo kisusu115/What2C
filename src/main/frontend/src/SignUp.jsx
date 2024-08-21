@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from "react";
+import axios from 'axios';
 
 export default function SignUp(){
     const Admin = {
@@ -36,14 +37,29 @@ export default function SignUp(){
         setEmailValid(regex.test(emailValue));
     }
 
-    const onClickConfirmButton = () => {
-        if(true){
-            alert(`회원가입에 성공했습니다. 환영합니다.
-                \n[${id}]
-                \n[${pw}]
-                \n[${email}]`)
-        }else{
-            alert("동록되지 않은 회원입니다.")
+    const onClickConfirmButton = async () => {
+        try {
+            const response = await axios.post('./member/create', {
+                id: id,
+                pw: pw,
+                email: email
+            });
+
+            if (response.status === 200) {
+                alert(`회원가입에 성공했습니다. 환영합니다.
+                    \n[${id}]
+                    \n[${pw}]
+                    \n[${email}]`);
+                window.location.href = './';
+            } else {
+                console.error("회원가입 실패");
+                alert("회원가입에 실패했습니다. 다시 시도해주세요.");
+            }
+
+
+        } catch (error) {
+            console.error("회원가입 실패");
+            alert("회원가입에 실패했습니다. 다시 시도해주세요.");
         }
     }
 

@@ -23,6 +23,10 @@ export default function Login(){
         
     }
 
+    const login = () => {
+        const json_data = [{"id" : id}, {"pw" : pw}]
+    }
+
     const signup = () => {
         navigate('/signup');
     }
@@ -59,7 +63,7 @@ export default function Login(){
                     />
                 </div>
                 <div>
-                    <button onClick = {functionName} className="loginButton">
+                    <button onClick = {login} className="loginButton">
                         로그인
                     </button>
                     <div className="signupTextContainer">

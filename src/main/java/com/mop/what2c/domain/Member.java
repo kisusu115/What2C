@@ -1,47 +1,28 @@
 package com.mop.what2c.domain;
 
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+@Getter @Setter @ToString
+@Entity(name = "members")
 public class Member {
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long m_no;
+
+    @Column(nullable = false)
     private String id;
+
+    @Column(nullable = false)
     private String pw;
+
+    @Column(nullable = false)
     private String email;
 
-    public Member(Long m_no, String id, String pw, String email){
-        this.m_no = m_no;
-        this.id = id;
-        this.pw = pw;
-        this.email = email;
-    }
-
-    public Long getM_no() {
-        return m_no;
-    }
-
-    public void setM_no(Long m_no) {
-        this.m_no = m_no;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getPw() {
-        return pw;
-    }
-
-    public void setPw(String pw) {
-        this.pw = pw;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
+    public Member(RequestMember requestMember){
+        this.id = requestMember.getId();
+        this.pw = requestMember.getPw();
+        this.email = requestMember.getEmail();
     }
 }
