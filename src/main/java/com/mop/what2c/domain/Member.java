@@ -2,11 +2,13 @@ package com.mop.what2c.domain;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
 @Getter @Setter @ToString
 @Entity(name = "members")
+@RequiredArgsConstructor
 public class Member {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long m_no;
@@ -20,9 +22,9 @@ public class Member {
     @Column(nullable = false)
     private String email;
 
-    public Member(RequestMember requestMember){
-        this.id = requestMember.getId();
-        this.pw = requestMember.getPw();
-        this.email = requestMember.getEmail();
+    public Member(MemberDTO memberDTO){
+        this.id = memberDTO.getId();
+        this.pw = memberDTO.getPw();
+        this.email = memberDTO.getEmail();
     }
 }

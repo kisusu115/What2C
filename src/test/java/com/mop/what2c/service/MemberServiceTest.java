@@ -1,24 +1,29 @@
 package com.mop.what2c.service;
 
 import com.mop.what2c.domain.Member;
-import com.mop.what2c.domain.RequestMember;
+import com.mop.what2c.domain.MemberDTO;
+import com.mop.what2c.repository.DBMemberRepoitory;
+import com.mop.what2c.repository.MemberRepository;
+import jakarta.persistence.EntityManager;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class MemberServiceTest {
 
-    MemberService memberService;
+    /*MemberService memberService;
 
     @Test
     void join(){
         //given
-        //RequestMember requestMember = new RequestMember("kisusu115", "abcd1234!!", "kisusu115@example.com"));
+        MemberDTO requestMember = new MemberDTO("kisusu115", "abcd1234!!", "kisusu115@example.com");
 
         //when
-        //memberService.join(requestMember);
-        //Member findMember = memberService.findMember(1L);
+        Long m_no = memberService.join(requestMember).getM_no();
+        Member foundMember = memberService.findMemberByMno(m_no).get();
+        MemberDTO foundMemberDto = new MemberDTO(foundMember);
 
         //then
-        //Assertions.assertThat(requestMember).isEqualTo(findMember);
-    }
+        Assertions.assertThat(requestMember).isEqualTo(foundMemberDto);
+    }*/
 }
