@@ -18,4 +18,6 @@ public interface MemberService {
     Optional<Member> changeMemberByMno(Long m_no, MemberDTO memberDTO);
 
     void deleteMemberByMno(Long m_no);
+
+    Long tryLogin(String id, String pw);
 }

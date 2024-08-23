@@ -8,8 +8,8 @@ import java.util.List;
 
 @RestController
 public class W2cController {
-    @GetMapping("/showMe")
-    public List<String> hello() {
-        return Arrays.asList("첫번째 인사", "두번째 인사");
+    @GetMapping("/example")
+    public String Example() {
+        return "example";
     }
 }

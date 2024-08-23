@@ -8,7 +8,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+
+
 
 @Service
 @Transactional
@@ -45,5 +48,20 @@ public class MemberServiceImpl implements MemberService{
     @Override
     public void deleteMemberByMno(Long m_no) {
         memberRepository.deleteByMno(m_no);
+    }
+
+    @Override
+    public Long tryLogin(String id, String pw) {
+        Optional<Member> optionalMember = memberRepository.findById(id);
+        if(optionalMember.isPresent()){
+            Member member = optionalMember.get();
+            if(Objects.equals(member.getPw(), pw)){
+                return member.getM_no();
+            }else {
+                return 0L;
+            }
+        }else{
+            return -1L;
+        }
     }
 }
