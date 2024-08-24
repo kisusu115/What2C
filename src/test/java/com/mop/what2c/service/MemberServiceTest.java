@@ -2,16 +2,18 @@ package com.mop.what2c.service;
 
 import com.mop.what2c.domain.Member;
 import com.mop.what2c.domain.MemberDTO;
-import com.mop.what2c.repository.DBMemberRepoitory;
+import com.mop.what2c.repository.DBMemberRepository;
 import com.mop.what2c.repository.MemberRepository;
 import jakarta.persistence.EntityManager;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
+@SpringBootTest
 public class MemberServiceTest {
-
-    /*MemberService memberService;
+    @Autowired
+    private MemberService memberService;
 
     @Test
     void join(){
@@ -24,6 +26,6 @@ public class MemberServiceTest {
         MemberDTO foundMemberDto = new MemberDTO(foundMember);
 
         //then
-        Assertions.assertThat(requestMember).isEqualTo(foundMemberDto);
-    }*/
+        Assertions.assertThat(requestMember).usingRecursiveComparison().isEqualTo(foundMemberDto);
+    }
 }
