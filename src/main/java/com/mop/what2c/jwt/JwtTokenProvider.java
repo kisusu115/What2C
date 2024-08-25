@@ -1,6 +1,7 @@
 package com.mop.what2c.jwt;
 
 import io.jsonwebtoken.*;
+import io.jsonwebtoken.security.SecurityException;
 import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Value;
 import java.security.Key;
@@ -89,18 +90,15 @@ public class JwtTokenProvider {
                     .build()
                     .parseClaimsJws(token);
             return true;
-        } catch (Exception e) {
-
-        }
-        /*catch (SecurityException | MalformedJwtException e) {
-            log.info("Invalid JWT Token", e);
+        } catch (SecurityException | MalformedJwtException e) {
+            System.out.println("Invalid JWT Token" + e.toString());
         } catch (ExpiredJwtException e) {
-            log.info("Expired JWT Token", e);
+            System.out.println("Expired JWT Token"+ e.toString());
         } catch (UnsupportedJwtException e) {
-            log.info("Unsupported JWT Token", e);
+            System.out.println("Unsupported JWT Token"+ e.toString());
         } catch (IllegalArgumentException e) {
-            log.info("JWT claims string is empty.", e);
-        }*/
+            System.out.println("JWT claims string is empty."+ e.toString());
+        }
         return false;
     }
 
