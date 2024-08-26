@@ -1,6 +1,6 @@
 package com.mop.what2c.repository;
 
-import com.mop.what2c.domain.MemberDTO;
+import com.mop.what2c.domain.MemberDto;
 import com.mop.what2c.domain.Member;
 import jakarta.persistence.EntityManager;
 import org.springframework.stereotype.Component;
@@ -8,16 +8,18 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Optional;
 
-@Component
-public class DBMemberRepository implements MemberRepository{
+//@Component
+public class DBMemberRepository { //implements MemberRepository{
 
+    /* JpaRepository 사용으로 인한 미사용 주석처리
+    
     private final EntityManager em;
     public DBMemberRepository(EntityManager em) {
         this.em = em;
     }
 
     @Override
-    public Member save(MemberDTO memberDTO) {
+    public Member save(MemberDto memberDTO) {
         Member member = new Member(memberDTO);
         em.persist(member);
         return member;
@@ -31,7 +33,7 @@ public class DBMemberRepository implements MemberRepository{
 
     @Override
     public Optional<Member> findById(String id) {
-        List<Member> result = em.createQuery("select m from Member m where m.id = :id", Member.class)
+        List<Member> result = em.createQuery("select m from members m where m.id = :id", Member.class)
                 .setParameter("id", id)
                 .getResultList();
         return result.stream().findAny();
@@ -39,14 +41,14 @@ public class DBMemberRepository implements MemberRepository{
 
     @Override
     public List<Member> findAll() {
-        return em.createQuery("select m from Member m", Member.class).getResultList();
+        return em.createQuery("select m from members m", Member.class).getResultList();
     }
 
     @Override
-    public Optional<Member> updateByMno(Long m_no, MemberDTO memberDTO) {
+    public Optional<Member> updateByMno(Long m_no, MemberDto memberDTO) {
         Member member = em.find(Member.class, m_no);
         member.setId(memberDTO.getId());
-        member.setPw(memberDTO.getPw());
+        member.setPassword(memberDTO.getPw());
         member.setEmail(memberDTO.getEmail());
         return Optional.ofNullable(member);
     }
@@ -56,4 +58,5 @@ public class DBMemberRepository implements MemberRepository{
         Member member = em.find(Member.class, m_no);
         em.remove(member);
     }
+    */
 }

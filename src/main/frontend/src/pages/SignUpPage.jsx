@@ -2,10 +2,6 @@ import React, {useEffect, useState} from "react";
 import axios from 'axios';
 
 export default function SignUpPage(){
-    const Admin = {
-        email : 'admin@example.com',
-        pw : 'pw1234!!!'
-    }
 
     const [id, setId] = useState('');
     const [pw, setPw] = useState('');
@@ -39,9 +35,9 @@ export default function SignUpPage(){
 
     const onClickConfirmButton = async () => {
         try {
-            const response = await axios.post('./member/create', {
-                id: id,
-                pw: pw,
+            const response = await axios.post('./member/sign-up', {
+                username: id,
+                password: pw,
                 email: email
             });
 
@@ -53,13 +49,13 @@ export default function SignUpPage(){
                 window.location.href = './';
             } else {
                 console.error("회원가입 실패");
-                alert("회원가입에 실패했습니다. 다시 시도해주세요.");
+                alert("회원가입에 실패했습니다. 응답이 200이 아니에요.");
             }
 
-
-        } catch (error) {
+        } 
+        catch (error) {
             console.error("회원가입 실패");
-            alert("회원가입에 실패했습니다. 다시 시도해주세요.");
+            alert("회원가입에 실패했습니다. 서버에 문제가 있나봐요.");
         }
     }
 

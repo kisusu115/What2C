@@ -72,7 +72,8 @@ public class JwtTokenProvider {
         }
 
         // 클레임에서 권한 정보 가져오기
-        Collection<? extends GrantedAuthority> authorities = Arrays.stream(claims.get("auth").toString().split(","))
+        Collection<? extends GrantedAuthority> authorities =
+                Arrays.stream(claims.get("auth").toString().split(","))
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
 
@@ -91,13 +92,13 @@ public class JwtTokenProvider {
                     .parseClaimsJws(token);
             return true;
         } catch (SecurityException | MalformedJwtException e) {
-            System.out.println("Invalid JWT Token" + e.toString());
+            System.out.println("Invalid JWT Token" + e);
         } catch (ExpiredJwtException e) {
-            System.out.println("Expired JWT Token"+ e.toString());
+            System.out.println("Expired JWT Token"+ e);
         } catch (UnsupportedJwtException e) {
-            System.out.println("Unsupported JWT Token"+ e.toString());
+            System.out.println("Unsupported JWT Token"+ e);
         } catch (IllegalArgumentException e) {
-            System.out.println("JWT claims string is empty."+ e.toString());
+            System.out.println("JWT claims string is empty."+ e);
         }
         return false;
     }

@@ -1,23 +1,21 @@
 package com.mop.what2c.service;
 
-import com.mop.what2c.domain.MemberDTO;
+import com.mop.what2c.domain.MemberDto;
 import com.mop.what2c.domain.Member;
+import com.mop.what2c.domain.SignUpDto;
+import com.mop.what2c.jwt.JwtToken;
+import jakarta.transaction.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface MemberService {
-    Member join(MemberDTO memberDTO);
 
-    Optional<Member> findMemberByMno(Long m_no);
+    public Optional<Member> findMemberById(Long id);
 
-    Optional<Member> findMemberById(String id);
+    public MemberDto join(SignUpDto signUpDto, String encodedPassword, List<String> roles);
 
-    List<Member> findAllMembers();
+    public MemberDto signUp(SignUpDto signUpDto);
 
-    Optional<Member> changeMemberByMno(Long m_no, MemberDTO memberDTO);
-
-    void deleteMemberByMno(Long m_no);
-
-    Long tryLogin(String id, String pw);
+    public JwtToken signIn(String username, String password);
 }

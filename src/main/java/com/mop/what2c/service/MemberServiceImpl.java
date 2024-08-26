@@ -1,17 +1,22 @@
 package com.mop.what2c.service;
 
-import com.mop.what2c.domain.MemberDTO;
 import com.mop.what2c.domain.Member;
+import com.mop.what2c.domain.MemberDto;
+import com.mop.what2c.domain.SignUpDto;
+import com.mop.what2c.jwt.JwtToken;
+import com.mop.what2c.jwt.JwtTokenProvider;
 import com.mop.what2c.repository.MemberRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
-
-
 
 @Service
 @Transactional
@@ -20,48 +25,50 @@ public class MemberServiceImpl implements MemberService{
     //@Autowired >> @RequiredArgsConstructor가 해줌
     private final MemberRepository memberRepository;
 
-    @Override
-    public Member join(MemberDTO memberDTO) {
-        return memberRepository.save(memberDTO);
-    }
+    private final PasswordEncoder passwordEncoder;
+
+    private final AuthenticationManagerBuilder authenticationManagerBuilder;
+    private final JwtTokenProvider jwtTokenProvider;
+
 
     @Override
-    public Optional<Member> findMemberByMno(Long m_no) {
-        return memberRepository.findByMno(m_no);
-    }
-
-    @Override
-    public Optional<Member> findMemberById(String id) {
+    public Optional<Member> findMemberById(Long id) {
         return memberRepository.findById(id);
     }
 
+    @Transactional
     @Override
-    public List<Member> findAllMembers() {
-        return memberRepository.findAll();
+    public MemberDto join(SignUpDto signUpDto, String encodedPassword, List<String> roles){
+        Member member = memberRepository.save(signUpDto.toEntity(encodedPassword, roles));
+        return MemberDto.toDto(member);
     }
 
+    @Transactional
     @Override
-    public Optional<Member> changeMemberByMno(Long m_no, MemberDTO memberDTO) {
-        return memberRepository.updateByMno(m_no, memberDTO);
-    }
-
-    @Override
-    public void deleteMemberByMno(Long m_no) {
-        memberRepository.deleteByMno(m_no);
-    }
-
-    @Override
-    public Long tryLogin(String id, String pw) {
-        Optional<Member> optionalMember = memberRepository.findById(id);
-        if(optionalMember.isPresent()){
-            Member member = optionalMember.get();
-            if(Objects.equals(member.getPw(), pw)){
-                return member.getM_no();
-            }else {
-                return 0L;
-            }
-        }else{
-            return -1L;
+    public MemberDto signUp(SignUpDto signUpDto) {
+        if (memberRepository.existsByUsername(signUpDto.getUsername())) {
+            throw new IllegalArgumentException("이미 사용 중인 사용자 이름입니다.");
         }
+        // Password 암호화
+        String encodedPassword = passwordEncoder.encode(signUpDto.getPassword());
+        List<String> roles = new ArrayList<>();
+        roles.add("USER");  // USER 권한 부여
+        return MemberDto.toDto(memberRepository.save(signUpDto.toEntity(encodedPassword, roles)));
+    }
+
+    @Transactional
+    @Override
+    public JwtToken signIn(String username, String password) {
+        // 1. username + password 를 기반으로 Authentication 객체 생성
+        // 이때 authentication 은 인증 여부를 확인하는 authenticated 값이 false
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, password);
+
+        // 2. 실제 검증. authenticate() 메서드를 통해 요청된 Member 에 대한 검증 진행
+        // authenticate 메서드가 실행될 때 CustomUserDetailsService 에서 만든 loadUserByUsername 메서드 실행
+        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+
+        // 3. 인증 정보를 기반으로 JWT 토큰 생성
+        JwtToken jwtToken = jwtTokenProvider.generateToken(authentication);
+        return jwtToken;
     }
 }

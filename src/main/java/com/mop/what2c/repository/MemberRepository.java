@@ -1,22 +1,22 @@
 package com.mop.what2c.repository;
 
-import com.mop.what2c.domain.MemberDTO;
+import com.mop.what2c.domain.MemberDto;
 import com.mop.what2c.domain.Member;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface MemberRepository {
+public interface MemberRepository extends JpaRepository<Member, Long> {
+    Optional<Member> findByUsername(String username);
 
-    Member save(MemberDTO memberDTO);
+    boolean existsByUsername(String username);
 
-    Optional<Member> findByMno(Long m_no);
+    // JPQL을 사용한 쿼리
+    //@Query("SELECT m FROM Member m WHERE m.username = :username AND m.age > :age")
+    //List<Member> findMembersByUsernameAndAge(@Param("username") String username, @Param("age") int age);
 
-    Optional<Member> findById(String id);
-
-    List<Member> findAll();
-
-    Optional<Member> updateByMno(Long m_no, MemberDTO memberDTO);
-
-    void deleteByMno(Long m_no);
+    // 네이티브 SQL 쿼리
+    //@Query(value = "SELECT * FROM member WHERE email = :email", nativeQuery = true)
+    //Optional<Member> findByEmailNative(@Param("email") String email);
 }

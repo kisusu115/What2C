@@ -26,20 +26,23 @@ export default function LoginPage(){
 
     const login = async () => {
         try {
-            const response = await axios.post('./member/login', {
-                id: id,
-                pw: pw
+            const response = await axios.post('./member/sign-in', {
+                username: id,
+                password: pw
             });
             if (response.status === 200) {
-                alert(response.data);
-                navigate('/home');
-            }else if(response.status === 401) {
-                alert(response.data);
-            }
+                const grantType = response.data.grantType;
+                const accessToken = response.data.accessToken;
+                const refreshToken = response.data.refreshToken;
 
+                alert(`로그인 성공!\ngrantType: ${grantType}\naccessToken: ${accessToken}\refreshToken: ${refreshToken}`);
+                navigate('/home');
+            } else if (response.status === 401) {
+                alert("로그인 실패: 인증 오류");
+            }
         } catch (error) {
-            const errorMessage = error.response.data
-            alert(errorMessage);
+            console.error("로그인 실패", error);
+            alert("로그인에 실패했습니다. 서버에 문제가 있나봐요.");
         }
     }
 
