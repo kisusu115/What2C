@@ -59,6 +59,8 @@ public class JwtTokenProvider {
                 .grantType("Bearer")
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
+                .accessTokenExpireTime(86400000L)
+                .refreshTokenExpireTime(86400000L)
                 .build();
     }
 
