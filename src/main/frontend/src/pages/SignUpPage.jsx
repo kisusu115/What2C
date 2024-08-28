@@ -1,7 +1,9 @@
 import React, {useEffect, useState} from "react";
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 export default function SignUpPage(){
+    const navigate = useNavigate();
 
     const [id, setId] = useState('');
     const [pw, setPw] = useState('');
@@ -46,7 +48,7 @@ export default function SignUpPage(){
                     \n[${id}]
                     \n[${pw}]
                     \n[${email}]`);
-                window.location.href = './';
+                    navigate('/signin');
             } else {
                 console.error("회원가입 실패");
                 alert("회원가입에 실패했습니다. 응답이 200이 아니에요.");

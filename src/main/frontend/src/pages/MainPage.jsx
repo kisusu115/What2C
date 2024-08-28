@@ -1,6 +1,18 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const MainPage = () => {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    // 세션 스토리지에서 인증 정보 제거
+    sessionStorage.removeItem('accessToken');
+    sessionStorage.removeItem('accessTokenExpiresAt');
+    
+    // 로그인 페이지로 리디렉션
+    navigate('/signin');
+  };
+
   return (
     <div className="page">
       <div className="titleWrap">
@@ -53,6 +65,25 @@ const MainPage = () => {
       <footer style={{ marginTop: '20px', backgroundColor: '#e2e0e0', padding: '10px', textAlign: 'center', fontSize: '12px', color: '#262626' }}>
         footer
       </footer>
+      
+      {/* 로그아웃 버튼 */}
+      <button 
+        onClick={handleLogout} 
+        style={{
+          position: 'absolute',
+          top: '10px',
+          right: '10px',
+          padding: '10px 20px',
+          fontSize: '14px',
+          backgroundColor: '#007bff',
+          color: '#fff',
+          border: 'none',
+          borderRadius: '5px',
+          cursor: 'pointer'
+        }}
+      >
+        로그아웃
+      </button>
     </div>
   );
 };

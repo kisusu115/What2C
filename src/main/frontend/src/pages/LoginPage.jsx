@@ -34,8 +34,15 @@ export default function LoginPage(){
                 const grantType = response.data.grantType;
                 const accessToken = response.data.accessToken;
                 const refreshToken = response.data.refreshToken;
+                const accessTokenExpireTime = response.data.accessTokenExpireTime;
 
-                alert(`로그인 성공!\ngrantType: ${grantType}\naccessToken: ${accessToken}\refreshToken: ${refreshToken}`);
+                // sessionStorage에 accessToken과 refreshToken 저장
+                sessionStorage.setItem('accessToken', accessToken);
+
+                const accessTokenExpiresAt = new Date().getTime() + accessTokenExpireTime;
+                sessionStorage.setItem('accessTokenExpiresAt', accessTokenExpiresAt);
+
+                alert(`로그인 성공!\ngrantType: ${grantType}\naccessToken: ${accessToken}\nrefreshToken: ${refreshToken}`);
                 navigate('/home');
             } else if (response.status === 401) {
                 alert("로그인 실패: 인증 오류");
