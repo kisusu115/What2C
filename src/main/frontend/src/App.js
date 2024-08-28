@@ -15,7 +15,7 @@ const isAccessTokenExpired = () => {
   return !accessTokenExpiresAt;
 };
 
-// 로그인된 사용자가 접근할 수 없는 페이지를 위한 컴포넌트
+// 기본 라우팅은 토큰 정보 여부에 따라 redirect
 const DefaultRoute = ({ element }) => {
   return !isAccessTokenExpired() ? <Navigate to="/home" /> : <Navigate to="/signin" />;
 };
