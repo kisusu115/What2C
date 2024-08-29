@@ -32,6 +32,7 @@ public class SignUpDto {
                 .password(encodedPassword)
                 .email(email)
                 .roles(roles)
+                .usertype("BASIC")
                 .build();
     }
 }

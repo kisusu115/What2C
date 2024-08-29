@@ -26,6 +26,7 @@ public class MemberDto {
                 .id(id)
                 .username(username)
                 .email(email)
+                .usertype("BASIC")
                 .build();
     }
 }

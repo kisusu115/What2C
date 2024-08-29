@@ -13,7 +13,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class AutoWebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/") // cors를 적용할 spring서버의 url 패턴.
+        registry.addMapping("/**") // cors를 적용할 spring서버의 url 패턴.
                 .allowedOrigins("http://localhost:3000")
                 .allowedMethods("GET", "POST", "PUT");
     }

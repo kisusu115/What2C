@@ -15,7 +15,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 @Entity
 @Table(name="members")
-@Getter
+@Getter @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
@@ -36,6 +36,9 @@ public class Member implements UserDetails {
     @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default // null이 아닌 빈 Array가 Default
     private List<String> roles = new ArrayList<>();
+
+    @Column(nullable = false)
+    private String usertype;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

@@ -7,7 +7,7 @@ import MainPage from './pages/MainPage';
 // accessToken 만료 여부 확인 함수
 const isAccessTokenExpired = () => {
   const accessTokenExpiresAt = sessionStorage.getItem('accessTokenExpiresAt');
-  if(new Date().getTime() <= accessTokenExpiresAt){
+  if(new Date().getTime() > accessTokenExpiresAt){
     sessionStorage.removeItem("accessToken");
     sessionStorage.removeItem("accessTokenExpiresAt");
     return true;
