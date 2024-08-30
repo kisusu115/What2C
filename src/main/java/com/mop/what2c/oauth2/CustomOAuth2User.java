@@ -6,15 +6,13 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class CustomOAuth2User implements OAuth2User {
 
     private final SocialUserDto socialUserDto;
 
-    public CustomOAuth2User(SocialUserDto socialUserDto){
+    public CustomOAuth2User(SocialUserDto socialUserDto) {
         this.socialUserDto = socialUserDto;
     }
 
@@ -28,14 +26,11 @@ public class CustomOAuth2User implements OAuth2User {
         Collection<GrantedAuthority> collection = new ArrayList<>();
 
         collection.add(new GrantedAuthority() {
-
             @Override
             public String getAuthority() {
-                // return socialUserDto.getRole();
-                return socialUserDto.getRoles().stream().collect(Collectors.joining(","));
+                return socialUserDto.getRole();
             }
         });
-
         return collection;
     }
 
@@ -44,7 +39,15 @@ public class CustomOAuth2User implements OAuth2User {
         return socialUserDto.getName();
     }
 
-    public String getUserName() {
+    public String getUsername() {
         return socialUserDto.getUsername();
+    }
+
+    public String getEmail() {
+        return socialUserDto.getEmail();
+    }
+
+    public String getUsertype(){
+        return socialUserDto.getUsertype();
     }
 }

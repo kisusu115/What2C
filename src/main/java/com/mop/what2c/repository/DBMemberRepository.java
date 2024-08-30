@@ -1,13 +1,5 @@
 package com.mop.what2c.repository;
 
-import com.mop.what2c.domain.MemberDto;
-import com.mop.what2c.domain.Member;
-import jakarta.persistence.EntityManager;
-import org.springframework.stereotype.Component;
-
-import java.util.List;
-import java.util.Optional;
-
 //@Component
 public class DBMemberRepository { //implements MemberRepository{
 

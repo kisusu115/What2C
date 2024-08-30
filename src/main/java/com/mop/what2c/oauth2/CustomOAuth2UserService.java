@@ -1,7 +1,6 @@
 package com.mop.what2c.oauth2;
 
 import com.mop.what2c.domain.Member;
-import com.mop.what2c.domain.MemberDto;
 import com.mop.what2c.domain.SocialUserDto;
 import com.mop.what2c.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -11,11 +10,6 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.Optional;
-
-// memberRepository.save를 Optional로 반환했는데 memberRepository.save(optionalMember.get());가 반영이 되는지 확인 요함
-
 @Service
 @RequiredArgsConstructor
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
@@ -23,7 +17,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     private final MemberRepository memberRepository;
 
     @Override
-    public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException{
+    public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
 
         OAuth2User oAuth2User = super.loadUser(userRequest);
         System.out.println(oAuth2User);
@@ -31,44 +25,55 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
         OAuth2Response oAuth2Response = null;
         if (registrationId.equals("naver")) {
+
             oAuth2Response = new NaverResponse(oAuth2User.getAttributes());
         }
         else if (registrationId.equals("google")) {
+
             oAuth2Response = new GoogleResponse(oAuth2User.getAttributes());
         }
         else {
+
             return null;
         }
 
+        //리소스 서버에서 발급 받은 정보로 사용자를 특정할 아이디값을 만듬
         String username = oAuth2Response.getProvider()+" "+oAuth2Response.getProviderId();
-        Optional<Member> optionalMember = memberRepository.findByUsername(username);
+        Member existMember = memberRepository.findByUsername(username);
 
-        if (optionalMember.isEmpty()) {
+        if (existMember == null) {
+
             Member member = Member.builder()
                     .username(username)
                     .email(oAuth2Response.getEmail())
-                    .roles(Collections.singletonList("USER"))
-                    .usertype(oAuth2Response.getProvider().toUpperCase())   //"NAVER" 또는 "GOOGLE"
+                    .role("ROLE_USER")
+                    .usertype(oAuth2Response.getProvider().toUpperCase())
                     .build();
+
             memberRepository.save(member);
 
-            SocialUserDto socialUserDTO = new SocialUserDto();
-            socialUserDTO.setUsername(username);
-            socialUserDTO.setName(oAuth2Response.getName());
-            socialUserDTO.setRoles(Collections.singletonList("USER"));
+            SocialUserDto socialUserDto = new SocialUserDto();
+            socialUserDto.setUsername(username);
+            socialUserDto.setName(oAuth2Response.getName());
+            socialUserDto.setRole("ROLE_USER");
+            socialUserDto.setEmail(oAuth2Response.getEmail());
+            socialUserDto.setUsertype(oAuth2Response.getProvider().toUpperCase());
 
-            return new CustomOAuth2User(socialUserDTO);
+            return new CustomOAuth2User(socialUserDto);
         }
         else {
-            optionalMember.get().setEmail(oAuth2Response.getEmail());
-            memberRepository.save(optionalMember.get());
+            existMember.setEmail(oAuth2Response.getEmail());
 
-            SocialUserDto socialUserDTO = new SocialUserDto();
-            socialUserDTO.setUsername(optionalMember.get().getUsername());
-            socialUserDTO.setName(oAuth2Response.getName());
-            socialUserDTO.setRoles(Collections.singletonList("USER"));
+            memberRepository.save(existMember);
 
-            return new CustomOAuth2User(socialUserDTO);
+            SocialUserDto socialUserDto = new SocialUserDto();
+            socialUserDto.setUsername(existMember.getUsername());
+            socialUserDto.setName(oAuth2Response.getName());
+            socialUserDto.setRole(existMember.getRole());
+            socialUserDto.setEmail(oAuth2Response.getEmail());
+            socialUserDto.setUsertype(oAuth2Response.getProvider().toUpperCase());
+
+            return new CustomOAuth2User(socialUserDto);
         }
     }
 }
