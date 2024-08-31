@@ -36,7 +36,8 @@ public class CustomOAuth2User implements OAuth2User {
 
     @Override
     public String getName() {
-        return socialUserDto.getName();
+        //return socialUserDto.getName(); name 정보 대신 username 반환하도록
+        return socialUserDto.getUsername();
     }
 
     public String getUsername() {

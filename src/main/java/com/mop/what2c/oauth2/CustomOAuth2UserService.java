@@ -45,6 +45,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
             Member member = Member.builder()
                     .username(username)
+                    .password("SOCIAL_USER_NO_PASSWORD")
                     .email(oAuth2Response.getEmail())
                     .role("ROLE_USER")
                     .usertype(oAuth2Response.getProvider().toUpperCase())

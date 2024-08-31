@@ -26,24 +26,35 @@ export default function LoginPage(){
 
     const login = async () => {
         try {
-            const response = await axios.post('./member/sign-in', {
-                username: id,
-                password: pw
+            const urlEncodedData = new URLSearchParams();
+            urlEncodedData.append('username', id);
+            urlEncodedData.append('password', pw);
+
+            // axios를 사용하여 POST 요청 전송
+            const response = await axios.post('http://localhost:8080/sign-in', urlEncodedData.toString(), {
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
             });
+
             if (response.status === 200) {
-                const grantType = response.data.grantType;
-                const accessToken = response.data.accessToken;
-                const refreshToken = response.data.refreshToken;
-                const accessTokenExpireTime = response.data.accessTokenExpireTime;
-
-                // sessionStorage에 accessToken과 refreshToken 저장
-                sessionStorage.setItem('accessToken', accessToken);
-
-                const accessTokenExpiresAt = new Date().getTime() + accessTokenExpireTime;
-                sessionStorage.setItem('accessTokenExpiresAt', accessTokenExpiresAt);
-
-                alert(`로그인 성공!\ngrantType: ${grantType}\naccessToken: ${accessToken}\nrefreshToken: ${refreshToken}`);
-                navigate('/home');
+                const authInfo = response.headers['authorization'].split(' ');
+                const grantType = authInfo[0];
+                const token = authInfo[1];
+                
+                if (token) {
+                    // 토큰을 sessionStorage에 저장
+                    sessionStorage.setItem('accessToken', token);
+                    sessionStorage.setItem('accessTokenExpiresAt', new Date().getTime() + 86420000);
+            
+                    // 성공적으로 인증된 요청
+                    console.log('인증된 요청 성공:', response.data);
+                    alert(`로그인 성공!\ngrantType: ${grantType}\naccessToken: ${token}`);
+                    navigate('/home');
+                } else {
+                    alert('Authorization 헤더가 없습니다.');
+                    console.error('Authorization 헤더가 없습니다.');
+                }
             } else if (response.status === 401) {
                 alert("로그인 실패: 인증 오류");
             }
@@ -51,6 +62,20 @@ export default function LoginPage(){
             console.error("로그인 실패", error);
             alert("로그인에 실패했습니다. 서버에 문제가 있나봐요.");
         }
+    }
+
+    const onNaverLogin = () => {
+        window.location.href = "http://localhost:8080/oauth2/authorization/naver";
+        
+        sessionStorage.setItem('accessToken', "tmptoken");
+        sessionStorage.setItem('accessTokenExpiresAt', new Date().getTime() + 86420000);
+    }
+
+    const onGoogleLogin = () => {
+        window.location.href = "http://localhost:8080/oauth2/authorization/google";
+        
+        sessionStorage.setItem('accessToken', "tmptoken");
+        sessionStorage.setItem('accessTokenExpiresAt', new Date().getTime() + 86420000);
     }
 
     const signup = () => {
@@ -104,7 +129,7 @@ export default function LoginPage(){
                         <span className="separateText">또는</span>
                     </div>
                     <div className="socialLoginContainer">
-                        <button className="socialButton googleButton">
+                        <button className="socialButton googleButton" onClick={onGoogleLogin}>
                             <img src={googleLogo} alt="Google" className="socialLogo"/>
                             구글로 로그인
                         </button>
@@ -112,7 +137,7 @@ export default function LoginPage(){
                             <img src={kakaoLogo} alt="Kakao" className="socialLogo"/>
                             카카오톡으로 로그인
                         </button>
-                        <button className="socialButton naverButton">
+                        <button className="socialButton naverButton" onClick={onNaverLogin}>
                             <img src={naverLogo} alt="Naver" className="socialLogo"/>
                             네이버로 로그인
                         </button>

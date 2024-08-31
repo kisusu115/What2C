@@ -1,16 +1,58 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 const MainPage = () => {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    onPageAvail();
+  }, []);
+
+  const onPageAvail = () => {
+    const token = getCookie('Authorization');
+    if(token){
+      sessionStorage.setItem('accessToken', token);
+      sessionStorage.setItem('accessTokenExpiresAt', new Date().getTime() + 86420000);
+    }
+  }
 
   const handleLogout = () => {
     // 세션 스토리지에서 인증 정보 제거
     sessionStorage.removeItem('accessToken');
     sessionStorage.removeItem('accessTokenExpiresAt');
     
+    // 클라이언트 측에서 쿠키 삭제
+    document.cookie = "Authorization=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    
     // 로그인 페이지로 리디렉션
     navigate('/signin');
+  };
+
+  const getCookie = (name) => {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+    return null;
+  };
+
+  const makeAuthenticatedRequest = async () => {
+    const token = sessionStorage.getItem('accessToken');
+    if (token) {
+        try {
+            const response = await axios.get('http://localhost:8080/user', {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            alert(response.data)
+            console.log('인증된 요청 성공:', response.data);
+        } catch (error) {
+            console.error('인증된 요청 실패:', error);
+        }
+    } else {
+        console.error('인증 토큰이 없습니다.');
+    }
   };
 
   return (
@@ -20,6 +62,7 @@ const MainPage = () => {
       </div>
       <div className="inputTitle">
         WhatToSee
+        <button onClick={makeAuthenticatedRequest}>UsrInfo</button>
       </div>
       
       <div className="contentWrap">

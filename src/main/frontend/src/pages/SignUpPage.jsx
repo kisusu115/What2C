@@ -37,7 +37,7 @@ export default function SignUpPage(){
 
     const onClickConfirmButton = async () => {
         try {
-            const response = await axios.post('./member/sign-up', {
+            const response = await axios.post('http://localhost:8080/sign-up', {
                 username: id,
                 password: pw,
                 email: email
