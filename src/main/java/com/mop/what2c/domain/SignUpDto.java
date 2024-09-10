@@ -1,8 +1,9 @@
 package com.mop.what2c.domain;
 
-import lombok.Getter;
+import lombok.*;
 
 @Getter
+@AllArgsConstructor
 public class SignUpDto {
     private String username;
     private String password;
